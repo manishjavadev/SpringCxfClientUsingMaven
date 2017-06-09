@@ -13,16 +13,20 @@
 
 
 	<context:annotation-config />
-	
-	<jaxws:client id="retrieveCaseResolutionService"
-		serviceClass="com.manish.javadev.service.HelloService"
-		address="http://localhost:4040/CXFSpringApp1/cxf/HelloService?wsdl">
-		<jaxws:binding>
-			<soap:soapBinding version="1.2" />
-		</jaxws:binding>
+
+	<jaxws:client id="personInformationService"
+		serviceClass="com.accenture.apsp.avs.ws.AssetVerificationWS"
+		address="https://requests-ete.accuityavs.com/RequestService/services/RequestServicesPort?wsdl" 
+		
+		
+		<jaxws:properties>
+			<entry key="agency.accuityavs.com.keystore.p12" value="true" />
+		</jaxws:properties>
+
 	</jaxws:client>
-	
-	<bean id="hs" class="com.manish.javadev.service.impl.HelloServiceImpl" />
+
+	<bean id="avs"
+		class="com.accenture.apsp.avs.service.impl.AssetVerificationServiceImpl" />
 
 
 </beans>

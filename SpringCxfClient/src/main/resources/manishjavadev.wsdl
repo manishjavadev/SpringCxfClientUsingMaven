@@ -1,0 +1,70 @@
+<wsdl:definitions name="testVerificationRequestService" targetNamespace="http://manish.javadev.com/v1.0.0/testVerification" xmlns:ping="http://manish.javadev.com/v1.0.0/testVerification/ping" xmlns:pingAck="http://manish.javadev.com/v1.0.0/testVerification/pingAck" xmlns:request="http://manish.javadev.com/v1.0.0/testVerification/request" xmlns:requestAck="http://manish.javadev.com/v1.0.0/testVerification/requestAck" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://manish.javadev.com/v1.0.0/testVerification" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <wsdl:types>
+      <xsd:schema>
+         <xsd:import namespace="http://manish.javadev.com/v1.0.0/testVerification/request" schemaLocation="./testVerificationRequest.v1_0.xsd"/>
+      </xsd:schema>
+      <xsd:schema>
+         <xsd:import namespace="http://manish.javadev.com/v1.0.0/testVerification/requestAck" schemaLocation="./testVerificationRequestAck.v1_0.xsd"/>
+      </xsd:schema>
+      <xsd:schema targetNamespace="http://manish.javadev.com/v1.0.0/testVerification/ping">
+         <xsd:complexType name="PingType"></xsd:complexType>
+         <xsd:element name="ping" type="ping:PingType"/>
+      </xsd:schema>
+      <xsd:schema targetNamespace="http://manish.javadev.com/v1.0.0/testVerification/pingAck">
+         <xsd:complexType name="PingAckType">
+            <xsd:sequence>
+               <xsd:element name="success" type="xsd:boolean"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:element name="pingAck" type="pingAck:PingAckType"/>
+      </xsd:schema>
+   </wsdl:types>
+   <wsdl:message name="testVerificationRequestAck">
+      <wsdl:part element="requestAck:testVerificationRequestAck" name="parameters"></wsdl:part>
+   </wsdl:message>
+   <wsdl:message name="testVerificationRequest">
+      <wsdl:part element="request:testVerificationRequest" name="parameters"></wsdl:part>
+   </wsdl:message>
+   <wsdl:message name="ping">
+      <wsdl:part element="ping:ping" name="parameters"></wsdl:part>
+   </wsdl:message>
+   <wsdl:message name="pingAck">
+      <wsdl:part element="pingAck:pingAck" name="parameters"></wsdl:part>
+   </wsdl:message>
+   <wsdl:portType name="RequestServicesPortType">
+      <wsdl:operation name="sendPing">
+         <wsdl:input message="tns:ping"></wsdl:input>
+         <wsdl:output message="tns:pingAck"></wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="sendtestVerificationRequest">
+         <wsdl:input message="tns:testVerificationRequest"></wsdl:input>
+         <wsdl:output message="tns:testVerificationRequestAck"></wsdl:output>
+      </wsdl:operation>
+   </wsdl:portType>
+   <wsdl:binding name="RequestSoapHttpBinding" type="tns:RequestServicesPortType">
+      <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+      <wsdl:operation name="sendPing">
+         <soap:operation soapAction="ping" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="sendtestVerificationRequest">
+         <soap:operation soapAction="testVerificationRequest" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+   </wsdl:binding>
+   <wsdl:service name="RequestServices">
+      <wsdl:port binding="tns:RequestSoapHttpBinding" name="RequestServicesPort">
+         <soap:address location="https://requests-ete.manish.com/RequestService/services/RequestServicesPort"/>
+      </wsdl:port>
+   </wsdl:service>
+</wsdl:definitions>

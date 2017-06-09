@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:req="http://avs.accuitysolutions.com/v1.0.0/assetVerification/requestAck"
+	elementFormDefault="qualified"
+	targetNamespace="http://avs.accuitysolutions.com/v1.0.0/assetVerification/requestAck">
+	
+	<complexType name="AssetVerificationRequestAckType">
+    	<sequence>
+			<element name="agencySystemId">
+				<annotation>
+					<documentation xml:lang="en">Identifies the system that originated the requests.</documentation>
+				</annotation>
+				<simpleType>
+					<restriction base="string">
+						<minLength value="1" />
+						<maxLength value="18" />
+					</restriction>
+				</simpleType>
+			</element>
+			<element name="transmittalId">
+				<annotation>
+					<documentation xml:lang="en">The same transmittalId value that was received</documentation>
+				</annotation>
+				<simpleType>
+					<restriction base="string">
+						<minLength value="1" />
+						<maxLength value="18" />
+					</restriction>
+				</simpleType>
+			</element>
+			<element name="status">
+				<annotation>
+					<documentation xml:lang="en">SUCCESS if all requests are successfully accepted, or FAILURE if
+						none of them are accepted. PARTIAL if some requests are accepted but others not.  Each
+						"requestBundle" element is either entirely accepted or entirely rejected.</documentation>
+				</annotation>
+				<simpleType>
+					<restriction base="string">
+						<enumeration value="SUCCESS" />
+						<enumeration value="FAILURE" />
+						<enumeration value="PARTIAL" />
+					</restriction>
+				</simpleType>
+			</element>
+    		<element name="error" type="req:ErrorType" minOccurs="0" maxOccurs="unbounded"/>
+	 	</sequence>
+    </complexType>
+
+	<complexType name="ErrorType">
+    	<sequence>
+			<element name="bundleId" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">Identifies the Request Bundle where the error occurred.
+						Omitted if the error is above the bundle level.</documentation>
+				</annotation>
+				<simpleType>
+					<restriction base="string">
+						<minLength value="1" />
+						<maxLength value="18" />
+					</restriction>
+				</simpleType>
+			</element>
+			<element name="clientRequestId" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">Identifies the request where the error occurred. If the error is not
+						at the request level, then this element is omitted.
+					</documentation>
+				</annotation>
+				<simpleType>
+					<restriction base="string">
+						<minLength value="1" />
+						<maxLength value="18" />
+					</restriction>
+				</simpleType>
+			</element>
+    		<element name="reason">
+				<simpleType>
+					<restriction base="string">
+						<enumeration value="SCHEMA_VALIDATION"/>
+						<enumeration value="INVALID_AGENCY_SYSTEM"/>
+						<enumeration value="INVALID_FIELD_OFFICE"/>
+						<enumeration value="INVALID_MESSAGE_DATA"/>
+						<enumeration value="INVALID_REQUESTOR"/>
+						<enumeration value="INVALID_STATE_CODE"/>
+						<enumeration value="FI_NOT_FOUND"/>
+						<enumeration value="DUPLICATE_FI"/>
+						<enumeration value="INVALID_DATE_RANGE"/>
+						<enumeration value="DUPLICATE_ACCT_NUM"/>
+						<enumeration value="OTHER"/>
+					</restriction>
+				</simpleType>
+    		</element>
+			<element name="reasonDescription" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">An optional text description of the error.</documentation>
+				</annotation>
+				<simpleType>
+					<restriction base="string">
+						<minLength value="1" />
+						<maxLength value="200" />
+					</restriction>
+				</simpleType>
+			</element>
+    	</sequence>
+    </complexType>
+	
+	<element name="assetVerificationRequestAck" type="req:AssetVerificationRequestAckType"/>
+</schema>

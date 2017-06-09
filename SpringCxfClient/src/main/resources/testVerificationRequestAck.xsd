@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:req="http://avs.accuitysolutions.com/v1.0.0/assetVerification/request"
+	elementFormDefault="qualified"
+	targetNamespace="http://avs.accuitysolutions.com/v1.0.0/assetVerification/request">
+	
+	<complexType name="AssetVerificationRequestType">
+		<sequence>
+			<element name="agencySystemId">
+				<annotation>
+					<documentation xml:lang="en">Identifies the system that is sending
+						the transmission.</documentation>
+				</annotation>
+				<simpleType>
+					<restriction base="string">
+						<minLength value="1" />
+						<maxLength value="18" />
+					</restriction>
+				</simpleType>
+			</element>
+			<element name="transmittalId">
+				<annotation>
+					<documentation xml:lang="en">Unique identifier for each
+						transmission.</documentation>
+				</annotation>
+				<simpleType>
+					<restriction base="string">
+						<minLength value="1" />
+						<maxLength value="18" />
+					</restriction>
+				</simpleType>
+			</element>
+			<element name="transmittalTimestamp" type="dateTime">
+				<annotation>
+					<documentation xml:lang="en">Timestamp when the transmission was
+						sent.</documentation>
+				</annotation>
+			</element>
+			<element name="requestBundle" type="req:RequestBundleType" maxOccurs="99">
+				<annotation>
+					<documentation xml:lang="en">The Subject and Requests associated
+						with the Case.
+					</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+
+	<complexType name="RequestBundleType">
+		<sequence>
+			<element name="bundleId">
+				<annotation>
+					<documentation xml:lang="en">Unique identifier for this grouping of
+						requests. This ID is assigned by the client and intended for
+						correlation of errors in the acknowledgment.
+					</documentation>
+				</annotation>
+				<simpleType>
+					<restriction base="string">
+						<minLength value="1" />
+						<maxLength value="18" />
+					</restriction>
+				</simpleType>
+			</element>
+			<element name="requestDate" type="dateTime">
+				<annotation>
+					<documentation xml:lang="en">Date and time when the requests were
+						 created.</documentation>
+				</annotation>
+			</element>
+			<element name="fieldOfficeCode">
+				<annotation>
+					<documentation xml:lang="en">Field office from where each request
+						originated.</documentation>
+				</annotation>
+				<simpleType>
+					<restriction base="string">
+						<maxLength value="5" />
+					</restriction>
+				</simpleType>
+			</element>
+			<element name="caseId">
+				<annotation>
+					<documentation xml:lang="en">Uniquely identifies the Case associated
+						with these Requests.</documentation>
+				</annotation>
+				<simpleType>
+					<restriction base="string">
+						<pattern value="\d{1,10}" />
+					</restriction>
+				</simpleType>
+			</element>
+			<element name="requestor" type="req:RequestorType">
+				<annotation>
+					<documentation xml:lang="en">Identifies the user who is submitting
+						the requests.</documentation>
+				</annotation>
+			</element>
+			<element name="subject" type="req:PersonType">
+				<annotation>
+					<documentation xml:lang="en">The name(s), SSN, and address
+						of the person under investigation.</documentation>
+				</annotation>
+			</element>
+			<element name="verificationRequest" type="req:VerificationRequestType"
+				minOccurs="0" maxOccurs="unbounded">
+				<annotation>
+					<documentation xml:lang="en">Requests directed at specific
+						institutions, listing alleged accounts.  A single response will be
+						sent for each verificationRequest.</documentation>
+				</annotation>
+			</element>
+			<element name="detectionRequest" type="req:DetectionRequestType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">An optional request to detect
+						accounts outside of the institutions listed by the
+						verificationRequest elements. Zero or more responses will be sent
+						for each detectionRequest.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+
+	<complexType name="RequestorType">
+		<sequence>
+			<element name="requestorName" type="req:NameType" />
+		</sequence>
+	</complexType>
+
+	<complexType name="PersonType">
+		<sequence>
+			<element name="primaryName" type="req:NameType" />
+			<element name="otherNames" type="req:NameType" minOccurs="0" maxOccurs="5" />
+			<element name="ssn">
+				<simpleType>
+					<restriction base="string">
+						<pattern value="\d{9}" />
+					</restriction>
+				</simpleType>
+			</element>
+			<element name="residenceAddr" type="req:AddressType"
+				minOccurs="0" />
+		</sequence>
+	</complexType>
+
+	<complexType name="NameType">
+		<sequence>
+			<element name="firstName">
+				<simpleType>
+					<restriction base="string">
+						<pattern value="[\p{IsBasicLatin}]{1,15}" />
+					</restriction>
+				</simpleType>
+			</element>
+			<element name="middleName" minOccurs="0">
+				<simpleType>
+					<restriction base="string">
+						<pattern value="[\p{IsBasicLatin}]{1,15}" />
+					</restriction>
+				</simpleType>
+			</element>
+			<element name="lastName">
+				<simpleType>
+					<restriction base="string">
+						<pattern value="[\p{IsBasicLatin}]{1,20}" />
+					</restriction>
+				</simpleType>
+			</element>
+			<element name="suffix" minOccurs="0">
+				<simpleType>
+					<restriction base="string">
+						<pattern value="[\p{IsBasicLatin}]{1,4}" />
+					</restriction>
+				</simpleType>
+			</element>
+		</sequence>
+	</complexType>
+
+	<complexType name="AddressType">
+		<sequence>
+			<element name="address">
+				<simpleType>
+					<restriction base="string">
+						<maxLength value="100" />
+					</restriction>
+				</simpleType>
+			</element>
+			<element name="city">
+				<simpleType>
+					<restriction base="string">
+						<maxLength value="100" />
+					</restriction>
+				</simpleType>
+			</element>
+			<element name="state">
+				<simpleType>
+					<restriction base="string">
+						<maxLength value="2" />
+					</restriction>
+				</simpleType>
+			</element>
+			<element name="zip5">
+				<simpleType>
+					<restriction base="string">
+						<pattern value="\d{5}" />
+					</restriction>
+				</simpleType>
+			</element>
+			<element name="zip4" minOccurs="0">
+				<simpleType>
+					<restriction base="string">
+						<pattern value="\d{4}" />
+					</restriction>
+				</simpleType>
+			</element>
+		</sequence>
+	</complexType>
+
+	<complexType name="VerificationRequestType">
+		<sequence>
+			<element name="clientRequestId">
+				<annotation>
+					<documentation xml:lang="en">Unique request identifier
+						assigned by the client and intended for correlation of responses.
+						This ID will be provided in the asynchronous response.
+					</documentation>
+				</annotation>
+				<simpleType>
+					<restriction base="string">
+						<minLength value="1" />
+						<maxLength value="18" />
+					</restriction>
+				</simpleType>
+			</element>
+			<element name="financialInstitution" type="req:FinancialInstitutionType" />
+			<element name="account" type="req:AccountDetailsType"
+				minOccurs="0" maxOccurs="unbounded">
+				<annotation>
+					<documentation xml:lang="en">Optional list of alleged
+						accounts.</documentation>
+				</annotation>
+			</element>
+			<element name="interestInfoRequested" type="boolean">
+				<annotation>
+					<documentation xml:lang="en">Responses include interest
+						only if requested.</documentation>
+				</annotation>
+			</element>
+			<element name="dateRange" type="req:DateRangeType" maxOccurs="unbounded" />
+			<element name="remarks" minOccurs="0">
+				<simpleType>
+					<restriction base="string">
+						<maxLength value="250" />
+					</restriction>
+				</simpleType>
+			</element>
+		</sequence>
+	</complexType>
+
+	<complexType name="DetectionRequestType">
+		<sequence>
+			<element name="clientRequestId">
+				<annotation>
+					<documentation xml:lang="en">Unique request identifier
+						assigned by the client and intended for correlation of responses.
+						This ID will be provided in the asynchronous response.
+					</documentation>
+				</annotation>
+				<simpleType>
+					<restriction base="string">
+						<minLength value="1" />
+						<maxLength value="18" />
+					</restriction>
+				</simpleType>
+			</element>
+			<element name="guardAddress" type="req:AddressType"
+				minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">Optional address for use with
+						GUARD (Geographic Undisclosed Account Radial Detection)
+					</documentation>
+				</annotation>
+			</element>
+			<element name="dateRange" type="req:DateRangeType" maxOccurs="unbounded" />
+			<element name="remarks" minOccurs="0">
+				<simpleType>
+					<restriction base="string">
+						<maxLength value="250" />
+					</restriction>
+				</simpleType>
+			</element>
+		</sequence>
+	</complexType>
+
+	<complexType name="AccountDetailsType">
+		<sequence>
+			<element name="accountNumber">
+				<simpleType>
+					<restriction base="string">
+						<maxLength value="28" />
+					</restriction>
+				</simpleType>
+			</element>
+			<element name="jointAccount" type="boolean" minOccurs="0" />
+		</sequence>
+	</complexType>
+	<complexType name="DateRangeType">
+		<sequence>
+			<element name="startDate" type="gYearMonth" />
+			<element name="endDate" type="gYearMonth" />
+		</sequence>
+	</complexType>
+
+	<complexType name="FinancialInstitutionType">
+		<choice>
+			<element name="routingNumber">
+				<simpleType>
+					<restriction base="string">
+						<pattern value="\d{9}" />
+					</restriction>
+				</simpleType>
+			</element>
+			<sequence>
+				<element name="locationId">
+					<annotation>
+						<documentation xml:lang="en">The unique identifier of a
+							specific branch location (TFPSYSID).</documentation>
+					</annotation>
+					<simpleType>
+						<restriction base="string">
+							<maxLength value="17"></maxLength>
+						</restriction>
+					</simpleType>
+				</element>
+				<element name="institutionId">
+					<annotation>
+						<documentation xml:lang="en">The unique identifier for the
+							entire institution (INST_ID).</documentation>
+					</annotation>
+					<simpleType>
+						<restriction base="string">
+							<maxLength value="9"></maxLength>
+						</restriction>
+					</simpleType>
+				</element>
+			</sequence>
+		</choice>
+	</complexType>
+
+	<element name="assetVerificationRequest" type="req:AssetVerificationRequestType" />
+</schema>
